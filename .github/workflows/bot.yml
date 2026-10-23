@@ -1,40 +1,26 @@
-name: Run Minecraft Bedrock Bot Server
+name: Launch Free Macro Bot
 
 on:
-  push:
-    branches: [ main ]
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
-  run-server:
+  run-bot:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout Repository Code
+    - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Setup Node.js Runtime Environment
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-node: '20'
 
-    - name: Initialize App Directories
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Start Minecraft Bot
       run: |
-        npm init -y
-        mkdir -p uuid
-        mkdir -p world_save
-
-    # Restores files automatically so your world is never overwritten or wiped
-    - name: Restore World and Login Cache
-      uses: actions/cache@v4
-      with:
-        path: |
-          ./uuid
-          ./world_save
-        key: minecraft-world-save-cache
-
-    - name: Install Bedrock Protocol Dependencies
-      run: npm install bedrock-protocol
-
-    - name: Launch Bot Server Into Cloud
-      run: node bot.js
+        # Allow the process to bypass network restrictions
+        sudo prlimit --pid=$$ --nofile=65535:65535
+        node bot.js
