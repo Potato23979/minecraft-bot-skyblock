@@ -5,7 +5,7 @@ function createBot() {
     
     const client = bedrock.createClient({
         // CRUCIAL: Must be a pure domain string with no trailing slashes or colons
-        host: 'bedrock.opblocks.com', 
+        host: 'bedrock.skyblock.net', 
         port: 19132,                  
         username: 'Potato_man2397.9@proton.me', // Your bot email
         profilesFolder: './uuid',     
