@@ -3,7 +3,7 @@ name: Run Minecraft Bedrock Bot
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Allows you to manually start/stop the bot with a button click
+  workflow_dispatch: 
 
 jobs:
   run-bot:
@@ -22,6 +22,13 @@ jobs:
       run: |
         npm init -y
         mkdir -p uuid
+
+    # CRUCIAL AUTOMATION STEP: Permanently saves and loads your login keys
+    - name: Restore Minecraft Login Cache
+      uses: actions/cache@v4
+      with:
+        path: ./uuid
+        key: msa-login-token
 
     - name: Install Bedrock Protocol Dependencies
       run: npm install bedrock-protocol
