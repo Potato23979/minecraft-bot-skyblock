@@ -1,38 +1,34 @@
 const bedrock = require('bedrock-protocol');
+const fs = require('fs');
 
-function createBot() {
-    console.log('Initializing connection to server...');
-    
-    const client = bedrock.createClient({
-        // Testing with bedrock.skyblock.net or ://mc-complex.com
-        host: 'bedrock.skyblock.net', 
-        port: 19132,                  
-        username: 'YourBotEmail@outlook.com', // Replace with your bot email
-        profilesFolder: './uuid',     
-        auth: 'microsoft',
-        // FORCE FIXES: These lines completely stop the undici / compression crash
-        skipValidation: true,
-        compressionLevel: 0, 
-        concurrency: 1
-    });
-
-    client.on('join', () => {
-        console.log('Bedrock bot successfully connected to the server!');
-    });
-
-    client.on('error', (err) => {
-        // Suppress the recurring zlib error to prevent log flooding
-        if (err.message.includes('header check') || err.message.includes('terminated')) {
-            console.log('Suppressed compression error. Waiting for server tick...');
-        } else {
-            console.error('Connection error:', err);
-        }
-    });
-
-    client.on('close', () => {
-        console.log('Connection closed. Reconnecting automatically in 10 seconds...');
-        setTimeout(createBot, 10000);
-    });
+// Create the permanent folder to store your world blocks and inventory data
+if (!fs.existsSync('./world_save')) {
+    fs.mkdirSync('./world_save');
 }
 
-createBot();
+console.log('Initializing connection... Host network is booting up.');
+
+const server = bedrock.createServer({
+    host: '0.0.0.0',             // Listens to connections over the cloud network
+    port: 19132,                 // Default Bedrock port for console connections
+    version: '1.21.40',           // Set to the current stable Bedrock version
+    offline: true,               // Allows direct discovery by your console account
+    maxPlayers: 10,
+    motd: {
+        motd: 'Permanent Cloud World',
+        levelName: 'Easy Survival'
+    }
+});
+
+// Enforces your world rules automatically whenever a player connects
+server.on('connect', (client) => {
+    client.on('join', () => {
+        console.log(`${client.username || 'Player'} connected to the persistent cloud session.`);
+        
+        // Enforce settings down to the console
+        client.queue('set_difficulty', { difficulty: 1 });       // 1 = Easy Difficulty
+        client.queue('set_player_game_type', { gamemode: 0 });   // 0 = Survival Mode
+    });
+});
+
+console.log('Your automated host is up and running. Ready for connection.');
