@@ -1,4 +1,4 @@
-name: Run Minecraft Bedrock Bot
+name: Run Minecraft Bedrock Bot Server
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch: 
 
 jobs:
-  run-bot:
+  run-server:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,20 +18,23 @@ jobs:
       with:
         node-version: 18
 
-    - name: Initialize App Directory
+    - name: Initialize App Directories
       run: |
         npm init -y
         mkdir -p uuid
+        mkdir -p world_save
 
-    - name: Restore Minecraft Login Cache
+    # Restores files automatically so your world is never overwritten or wiped
+    - name: Restore World and Login Cache
       uses: actions/cache@v4
       with:
-        path: ./uuid
-        key: msa-login-token
+        path: |
+          ./uuid
+          ./world_save
+        key: minecraft-world-save-cache
 
-    # FIX: Explicitly forces the installation of version 1.1.14 to stop the compression bug
-    - name: Install Stable Bedrock Protocol
-      run: npm install bedrock-protocol@1.1.14
+    - name: Install Bedrock Protocol Dependencies
+      run: npm install bedrock-protocol
 
-    - name: Launch Bot Into Cloud
+    - name: Launch Bot Server Into Cloud
       run: node bot.js
