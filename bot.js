@@ -2,7 +2,7 @@ const bedrock = require('bedrock-protocol');
 
 function createBot() {
     const client = bedrock.createClient({
-        host: 'play.cosmosmc.org',   // Your OneBlock server IP
+        host: 'bedrock.opblocks.com',   // Your OneBlock server IP
         port: 19132,                 // Bedrock port
         username: 'Potato_man2397.9@proton.me', // Your free Family Share email
         profilesFolder: './uuid',    // Saves authentication tokens locally
