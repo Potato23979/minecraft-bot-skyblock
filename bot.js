@@ -11,7 +11,7 @@ console.log('Initializing connection... Host network is booting up.');
 const server = bedrock.createServer({
     host: '0.0.0.0',             // Listens to connections over the cloud network
     port: 19132,                 // Default Bedrock port for console connections
-    version: '1.21.40',           // Set to the current stable Bedrock version
+    version: '1.21.42',          // FIX: Updated to a fully supported version string
     offline: true,               // Allows direct discovery by your console account
     maxPlayers: 10,
     motd: {
